@@ -1,1 +1,87 @@
 # cortisol
+
+![Cortisol](docs/cortisol_h_small.png#gh-light-mode-only)
+![Cortisol](docs/cortisol_h_small_w.png#gh-dark-mode-only)
+
+A command-line tool that provides cost estimation and forecasting for main observability tools like [Datadog](https://www.datadoghq.com/), [New Relic](https://newrelic.com/), and [Grafana](https://grafana.com/), helping users plan and optimize their log, metric and trace costs pre-production.
+
+For detailed reference to Cortisol commands please go to: [Read the Docs](TODO)
+
+## Installation
+
+### Prerequisites
+
+cortisol requires the following one of the following Python versions: 3.8, 3.9, 3.10 or 3.11
+
+### Install cortisol
+
+At the command line:
+
+    pip install cortisol
+
+## Getting started
+
+TODO
+
+## Commands
+
+### Log Cost Estimate
+
+#### Name
+
+Forecast log costs
+
+#### Synopsis
+
+    cortisol logs cost-estimate --host HOST --log-file LOG_FILE --users NUM_USERS --spawn-rate SPAWN_RATE --run-time RUN_TIME -cortisol-file CORTISOL_PYTHON_FILE
+
+#### Description
+
+Forecast log costs pre-production with Cortisol for Datadog, New Relic, and Grafana
+
+### Example
+
+    cortisol logs cost-estimate --host http://10.20.31.32:8000 --users 100 --spawn-rate 30 --run-time 20m -cortisol-file some_cortisol_file.py
+
+#### Required Flags - Option 1
+
+`-f, --cortisol-file PATH`      Path to the CORTISOL_FILE
+
+`-h, --host TEXT`               Host in the following format: http://10.20.31.32 or http://10.20.31.32:8000
+
+`-l, --log-file PATH`           Path to log file
+
+`-u, --users INTEGER`           Peak number of concurrent users
+
+`-r, --spawn-rate INTEGER`      Rate to spawn users at (users per second)
+
+`-t, --run-time TEXT`           Stop after the specified amount of time, e.g. (50, 30s, 200m, 5h, 2h30m, etc.). Default unit in seconds.
+
+#### Required Flags - Option 2
+
+`--config PATH`                 Path to config file (YAML or JSON) containing the flags from option 1
+
+Here's a YAML example:
+
+```YAML
+host: "http://10.20.31.32:8000"
+log_file: "/path/to/logfile"
+users: 100
+spawn_rate: 30
+run_time: "20m"
+cortisol_file: "some_cortisol_file.py"
+
+```
+
+and a JSON example:
+
+```JSON
+{
+  "host": "http://10.20.31.32:8000",
+  "log_file": "/path/to/logfile",
+  "users": 100,
+  "spawn_rate": 30,
+  "run_time": "20m",
+  "cortisol_file": "some_cortisol_file.py"
+}
+```
