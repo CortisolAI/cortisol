@@ -59,18 +59,35 @@ Forecast log costs pre-production with Cortisol for Datadog, New Relic, and Graf
 
 #### Required Flags - Option 2
 
-`--config PATH`                 Path to config file (YAML or JSON) containing the flags from option 1
+All the latter options plus the following in case your application run in a Docker container:
+
+`-c, --container-id TEXT`      Optional docker container id where your application runs
+
+#### Required Flags - Option 3
+
+`--config PATH`                 Path to config file (YAML or JSON) containing the long version of flags from option 1
 
 Here's a YAML example:
 
 ```YAML
 host: "http://10.20.31.32:8000"
-log_file: "/path/to/logfile"
+log-file: "/path/to/logfile"
 users: 100
-spawn_rate: 30
-run_time: "20m"
-cortisol_file: "some_cortisol_file.py"
+spawn-rate: 30
+run-time: "20m"
+cortisol-file: "some_cortisol_file.py"
+```
 
+Here's a YAML example with docker container id:
+
+```YAML
+host: "http://10.20.31.32:8000"
+log-file: "/path/to/logfile"
+users: 100
+spawn-rate: 30
+run-time: "20m"
+cortisol-file: "some_cortisol_file.py"
+container-id: "80f1bc1e7feb"
 ```
 
 and a JSON example:
@@ -82,6 +99,7 @@ and a JSON example:
   "users": 100,
   "spawn_rate": 30,
   "run_time": "20m",
-  "cortisol_file": "some_cortisol_file.py"
+  "cortisol_file": "some_cortisol_file.py",
+  "container_id": "80f1bc1e7feb"
 }
 ```
