@@ -11,7 +11,7 @@
 
 ## Setup Environment
 - [Poetry](https://python-poetry.org/) is used as a dependency management tool
-- Run `poetry install --with test` to install dependencies 
+- Run `poetry install --with dev` to install dependencies 
 - Ready to rock!
 
 ## Testing Locally
