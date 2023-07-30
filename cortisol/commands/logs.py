@@ -29,6 +29,12 @@ def cost_estimate(
         "--run-time",
         help="Stop after the specified amount of time, e.g. (50, 30s, 200m, 5h, 2h30m, etc.). Default unit in seconds.",
     ),
+    container_id: str = typer.Option(
+        None,
+        "-c",
+        "--container-id",
+        help="Optional docker container id where your application runs",
+    ),
     config: Path = typer.Option(None, "--config", help="Path to config file"),
 ):
     """
