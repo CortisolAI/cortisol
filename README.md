@@ -1,6 +1,15 @@
 ![Cortisol](docs/cortisol_h_large.png#gh-light-mode-only)
 ![Cortisol](docs/cortisol_h_large_w.png#gh-dark-mode-only)
 
+<p align="center">
+    <em>Cortisol, accurately forecast log costs pre-production.</em>
+</p>
+<p align="center">
+<a href="https://github.com/cortisolai/cortisol/actions?query=workflow%3ACI" target="_blank">
+    <img src="https://github.com/cortisolai/cortisol/workflows/CI/badge.svg" alt="Test">
+</a>
+</p>
+
 # cortisol
 
 A command-line tool that provides cost estimation and forecasting for main observability tools like [Datadog](https://www.datadoghq.com/), [New Relic](https://newrelic.com/), and [Grafana](https://grafana.com/), helping users plan and optimize their log, metric and trace costs pre-production.
