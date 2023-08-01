@@ -15,14 +15,23 @@ def _check_keys_in_file(file_path: Path):
             data = yaml.safe_load(file_content)
         except yaml.YAMLError:
             # If parsing as YAML fails, try parsing as JSON
-            import pdb;pdb.set_trace()
+            import pdb
+
+            pdb.set_trace()
             data = json.loads(file_content)
         except json.JSONDecodeError:
             raise ValueError("Invalid YAML or JSON format in the input file.")
     except FileNotFoundError:
         raise FileNotFoundError(f"File not found at path: {file_path}")
 
-    keys_to_check = ['cortisol-file', 'host', 'log-file', 'run-time', 'spawn-rate', 'users']     
+    keys_to_check = [
+        "cortisol-file",
+        "host",
+        "log-file",
+        "run-time",
+        "spawn-rate",
+        "users",
+    ]
     missing_keys = [key for key in keys_to_check if key not in data]
 
     if missing_keys:

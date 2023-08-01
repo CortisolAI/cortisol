@@ -37,7 +37,9 @@ def docker_log_file_size_reader(container_id: str, file_path: str):
     docker_client = docker.from_env()
     try:
         container = docker_client.containers.get(container_id)
-        exec_result = container.exec_run(["du", "-b", file_path], stdout=True, stderr=True, stream=True)
+        exec_result = container.exec_run(
+            ["du", "-b", file_path], stdout=True, stderr=True, stream=True
+        )
 
         # Concatenate the stream content to get the output
         exec_output = b"".join(exec_result.output)
