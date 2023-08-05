@@ -4,6 +4,8 @@ from pathlib import Path
 import typer
 import yaml
 
+from cortisol.cortisollib.logs import get_cost_estimate
+
 app = typer.Typer()
 
 
@@ -92,6 +94,14 @@ def cost_estimate(
             raise typer.Abort()
 
     typer.echo("Cost estimate command in the making")
+    get_cost_estimate(
+        cortisol_file=cortisol_file,
+        log_file=log_file,
+        num_users=num_users,
+        spawn_rate=spawn_rate,
+        run_time=run_time,
+        container_id=container_id,
+    )
 
 
 if __name__ == "__main__":

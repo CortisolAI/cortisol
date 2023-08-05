@@ -1,8 +1,9 @@
 import os
 import docker
+from pathlib import Path
 
 
-def local_log_file_size_reader(file_path: str):
+def local_log_file_size_reader(file_path: Path):
     """
     Reads log file size from a service running locally
 
@@ -23,7 +24,7 @@ def local_log_file_size_reader(file_path: str):
         raise FileNotFoundError(f"Error while accessing file: {e}")
 
 
-def docker_log_file_size_reader(container_id: str, file_path: str):
+def docker_log_file_size_reader(container_id: str, file_path: Path):
     """
     Reads log file size from a service running locally on docker
 
@@ -38,7 +39,7 @@ def docker_log_file_size_reader(container_id: str, file_path: str):
     try:
         container = docker_client.containers.get(container_id)
         exec_result = container.exec_run(
-            ["du", "-b", file_path], stdout=True, stderr=True, stream=True
+            ["du", "-b", str(file_path)], stdout=True, stderr=True, stream=True
         )
 
         # Concatenate the stream content to get the output
@@ -55,7 +56,7 @@ def docker_log_file_size_reader(container_id: str, file_path: str):
         raise Exception(f"Error while executing command in the container {e}")
 
 
-def log_file_size_reader(file_path: str, container_id: str = None):
+def log_file_size_reader(file_path: Path, container_id: str = None):
     """
     Reads log file size from a service running locally with or without docker
 
@@ -67,7 +68,6 @@ def log_file_size_reader(file_path: str, container_id: str = None):
     :rtype:
     """
     if container_id != "":
-        print(f"Container ID: {container_id}")
         return docker_log_file_size_reader(container_id, file_path)
     else:
         return local_log_file_size_reader(file_path)
