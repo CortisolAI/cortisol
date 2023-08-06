@@ -4,7 +4,7 @@ from pathlib import Path
 import typer
 import yaml
 
-from cortisol.cortisollib.logs import get_cost_estimate
+from cortisol.cortisollib.log_cost_estimator import get_cost_estimate
 
 app = typer.Typer()
 

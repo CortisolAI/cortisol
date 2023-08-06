@@ -1,5 +1,6 @@
 import json
 
+from unittest.mock import Mock, patch
 from typer.testing import CliRunner
 import yaml
 
@@ -22,7 +23,8 @@ def test_cost_estimate_yaml_config_file_only_happy_case():
         with open("config.yml", "w") as file:
             yaml.dump(data, file)
 
-        result = runner.invoke(app, ["--config", "config.yml"])
+        with patch("cortisol.commands.logs.get_cost_estimate"):
+            result = runner.invoke(app, ["--config", "config.yml"])
 
     assert result.exit_code == 0
 
@@ -42,29 +44,31 @@ def test_cost_estimate_json_config_file_only_happy_case():
         with open("config.json", "w") as file:
             json.dump(data, file)
 
-        result = runner.invoke(app, ["--config", "config.json"])
+        with patch("cortisol.commands.logs.get_cost_estimate"):
+            result = runner.invoke(app, ["--config", "config.json"])
 
     assert result.exit_code == 0
 
 
 def test_cost_estimate_configs_in_args_happy_case():
-    result = runner.invoke(
-        app,
-        [
-            "-h",
-            "http://10.20.31.32:8000",
-            "-l",
-            "/path/to/logfile",
-            "-u",
-            "100",
-            "-r",
-            "30",
-            "-t",
-            "1h20m",
-            "-f",
-            "some_cortisol_file.py",
-        ],
-    )
+    with patch("cortisol.commands.logs.get_cost_estimate"):
+        result = runner.invoke(
+            app,
+            [
+                "-h",
+                "http://10.20.31.32:8000",
+                "-l",
+                "/path/to/logfile",
+                "-u",
+                "100",
+                "-r",
+                "30",
+                "-t",
+                "1h20m",
+                "-f",
+                "some_cortisol_file.py",
+            ],
+        )
 
     assert result.exit_code == 0
 

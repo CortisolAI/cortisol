@@ -24,15 +24,12 @@ def render_locustfile(cortisol_file: Path):
     return rendered_content
 
 
-def get_cost_estimate(
-    cortisol_file: Path,
-    log_file: Path,
-    num_users: int,
-    spawn_rate: int,
-    run_time: str,
-    container_id: str,
-):
-    render_locustfile(cortisol_file)
+def render_locust_command(
+        log_file: Path,
+        num_users: int,
+        spawn_rate: int,
+        run_time: str,
+        container_id: str):
 
     command = [
         "locust",
@@ -50,7 +47,28 @@ def get_cost_estimate(
         "--log-file",
         log_file,
     ]
-    print(command)
+
+    return command
+
+
+def get_cost_estimate(
+    cortisol_file: Path,
+    log_file: Path,
+    num_users: int,
+    spawn_rate: int,
+    run_time: str,
+    container_id: str
+):
+    render_locustfile(cortisol_file)
+
+    command = render_locust_command(
+        log_file,
+        num_users,
+        spawn_rate,
+        run_time,
+        container_id
+    )
+
     # Execute the command and capture the output
     process = subprocess.run(command, stdout=subprocess.PIPE)
     output = process.stdout.decode("utf-8")

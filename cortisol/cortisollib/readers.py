@@ -56,7 +56,7 @@ def docker_log_file_size_reader(container_id: str, file_path: Path):
         raise Exception(f"Error while executing command in the container {e}")
 
 
-def log_file_size_reader(file_path: Path, container_id: str = None):
+def log_file_size_reader(file_path: Path, container_id: str = ""):
     """
     Reads log file size from a service running locally with or without docker
 

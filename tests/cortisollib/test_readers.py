@@ -1,3 +1,4 @@
+from pathlib import Path
 from unittest import TestCase
 from collections import namedtuple
 import os
@@ -28,13 +29,13 @@ class TestFileSizeFunctions(TestCase):
 
         # Test file size reading from Docker container
         container_id = "test_container_id"
-        file_path = "/app/playground_app.log"
+        file_path = Path("/app/playground_app.log")
         result = docker_log_file_size_reader(container_id, file_path)
         self.assertEqual(result, 123)
 
     def test_local_file_size_reader_success(self):
         # Test file size reading from the local file system
-        file_path = "test_file.txt"
+        file_path = Path("test_file.txt")
         with open(file_path, "wb") as file:
             file.write(b"This is a test file.")
 
@@ -46,7 +47,7 @@ class TestFileSizeFunctions(TestCase):
 
     def test_local_file_size_reader_file_not_found(self):
         # Test handling of FileNotFoundError for local file reader
-        file_path = "non_existent_file.txt"
+        file_path = Path("non_existent_file.txt")
         with self.assertRaises(FileNotFoundError):
             local_log_file_size_reader(file_path)
 

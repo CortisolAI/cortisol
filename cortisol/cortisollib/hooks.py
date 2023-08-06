@@ -2,7 +2,7 @@ from time import time
 from prettytable import PrettyTable
 
 from cortisol.cortisollib.readers import log_file_size_reader
-from cortisol.cortisollib.estimators import (
+from cortisol.cortisollib.calculators import (
     datadog_log_cost_calculator,
     grafana_log_cost_calculator,
     format_bytes,
