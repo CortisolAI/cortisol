@@ -2,7 +2,11 @@ import unittest
 from unittest.mock import Mock, patch
 from pathlib import Path
 
-from cortisol.cortisollib.log_cost_estimator import render_locustfile, render_locust_command, get_cost_estimate
+from cortisol.cortisollib.log_cost_estimator import (
+    render_locustfile,
+    render_locust_command,
+    get_cost_estimate,
+)
 
 
 class TestLibLogs(unittest.TestCase):
@@ -39,11 +43,16 @@ class TestLibLogs(unittest.TestCase):
             "-f",
             "./cortisol/cortisollib/templates/locustfile.py",
             "--headless",
-            "--users", str(self.num_users),
-            "--spawn-rate", str(self.spawn_rate),
-            "--run-time", str(self.run_time),
-            "--container-id", self.container_id,
-            "--log-file", Path(self.log_file)
+            "--users",
+            str(self.num_users),
+            "--spawn-rate",
+            str(self.spawn_rate),
+            "--run-time",
+            str(self.run_time),
+            "--container-id",
+            self.container_id,
+            "--log-file",
+            Path(self.log_file),
         ]
 
         result = render_locust_command(
@@ -60,7 +69,6 @@ class TestLibLogs(unittest.TestCase):
     @patch("cortisol.cortisollib.readers.log_file_size_reader")
     @patch("cortisol.cortisollib.log_cost_estimator.subprocess")
     def test_get_cost_estimate(self, mock_subprocess, mock_log_file_size_reader):
-
         process = mock_subprocess.run.return_value = Mock(
             stdout=b"mocked_stdout",
             stderr=b"mocked_stderr",
@@ -76,6 +84,7 @@ class TestLibLogs(unittest.TestCase):
             num_users=self.num_users,
             spawn_rate=self.spawn_rate,
             run_time=self.run_time,
-            container_id=self.container_id)
+            container_id=self.container_id,
+        )
 
         self.assertEqual(result, process.returncode)

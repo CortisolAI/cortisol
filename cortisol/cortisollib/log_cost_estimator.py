@@ -25,12 +25,8 @@ def render_locustfile(cortisol_file: Path):
 
 
 def render_locust_command(
-        log_file: Path,
-        num_users: int,
-        spawn_rate: int,
-        run_time: str,
-        container_id: str):
-
+    log_file: Path, num_users: int, spawn_rate: int, run_time: str, container_id: str
+):
     command = [
         "locust",
         "-f",
@@ -57,16 +53,12 @@ def get_cost_estimate(
     num_users: int,
     spawn_rate: int,
     run_time: str,
-    container_id: str
+    container_id: str,
 ):
     render_locustfile(cortisol_file)
 
     command = render_locust_command(
-        log_file,
-        num_users,
-        spawn_rate,
-        run_time,
-        container_id
+        log_file, num_users, spawn_rate, run_time, container_id
     )
 
     # Execute the command and capture the output

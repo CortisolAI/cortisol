@@ -94,6 +94,9 @@ def cost_estimate(
             raise typer.Abort()
 
     typer.echo("Cost estimate command in the making")
+    if not container_id:
+        container_id = ""
+
     get_cost_estimate(
         cortisol_file=cortisol_file,
         log_file=log_file,
