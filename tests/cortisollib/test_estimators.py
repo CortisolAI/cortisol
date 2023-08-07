@@ -10,7 +10,10 @@ class TestLogCostCalculators(unittest.TestCase):
     def test_datadog_log_cost_calculator(self):
         size_gb = 5.0
         expected_cost = size_gb * 0.1
-        self.assertEqual(datadog_log_cost_calculator(size_gb), expected_cost)
+        n_retained_logs = 0.0
+        self.assertEqual(
+            datadog_log_cost_calculator(size_gb, n_retained_logs), expected_cost
+        )
 
     def test_grafana_log_cost_calculator(self):
         size_gb = 10.0
@@ -27,8 +30,11 @@ class TestLogCostCalculators(unittest.TestCase):
 
     def test_datadog_log_cost_calculator_zero_size(self):
         size_gb = 0.0
+        n_retained_logs = 0.0
         expected_cost = 0.0
-        self.assertEqual(datadog_log_cost_calculator(size_gb), expected_cost)
+        self.assertEqual(
+            datadog_log_cost_calculator(size_gb, n_retained_logs), expected_cost
+        )
 
     def test_grafana_log_cost_calculator_negative_size(self):
         size_gb = -5.0
