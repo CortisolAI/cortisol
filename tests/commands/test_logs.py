@@ -14,8 +14,8 @@ def test_cost_estimate_yaml_config_file_only_happy_case():
         "host": "http://10.20.31.32:8000",
         "log-file": "/path/to/logfile",
         "users": 100,
-        "spawn-rate": 30,
-        "run-time": "20m",
+        "spawn-rate": 5,
+        "run-time": "10s",
         "cortisol-file": "some_cortisol_file.py",
     }
 
@@ -34,8 +34,8 @@ def test_cost_estimate_json_config_file_only_happy_case():
         "host": "http://10.20.31.32:8000",
         "log-file": "/path/to/logfile",
         "users": 100,
-        "spawn-rate": 30,
-        "run-time": "20m",
+        "spawn-rate": 5,
+        "run-time": "10s",
         "cortisol-file": "some_cortisol_file.py",
         "container-id": "80f1bc1e7feb",
     }

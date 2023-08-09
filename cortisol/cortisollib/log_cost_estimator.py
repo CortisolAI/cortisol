@@ -42,7 +42,12 @@ def render_locustfile(cortisol_file: Path):
 
 
 def render_locust_command(
-    log_file: Path, num_users: int, spawn_rate: int, run_time: str, container_id: str
+    host: str,
+    log_file: Path,
+    num_users: int,
+    spawn_rate: int,
+    run_time: str,
+    container_id: str,
 ):
     """
     Generate a command for running a Locust load test in headless mode.
@@ -76,6 +81,8 @@ def render_locust_command(
         "-f",
         "./cortisol/cortisollib/templates/locustfile.py",
         "--headless",
+        "--host",
+        host,
         "--users",
         str(num_users),
         "--spawn-rate",
@@ -93,11 +100,12 @@ def render_locust_command(
 
 def get_cost_estimate(
     cortisol_file: Path,
+    host: str,
     log_file: Path,
     num_users: int,
     spawn_rate: int,
     run_time: str,
-    container_id: str,
+    container_id: str = "",
 ):
     """
     Calculate the estimated cost of logs.
@@ -109,6 +117,7 @@ def get_cost_estimate(
 
     Args:
         cortisol_file (Path): Path to the Locustfile containing the load test scenario.
+        host (str): Host to load test in the following format: http://10.21.32.33
         log_file (Path): Path to the log file where Locust logs will be stored.
         num_users (int): Number of concurrent users/clients to simulate.
         spawn_rate (int): The rate at which new users are spawned per second.
@@ -131,7 +140,7 @@ def get_cost_estimate(
     render_locustfile(cortisol_file)
 
     command = render_locust_command(
-        log_file, num_users, spawn_rate, run_time, container_id
+        host, log_file, num_users, spawn_rate, run_time, container_id
     )
 
     # Execute the command and capture the output

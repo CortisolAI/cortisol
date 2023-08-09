@@ -2,6 +2,7 @@ from time import time
 from prettytable import PrettyTable
 
 from cortisol.cortisollib.readers import log_file_size_reader, count_log_entries
+from cortisol.cortisollib.estimators import linear_extrapolator
 from cortisol.cortisollib.calculators import (
     datadog_log_cost_calculator,
     grafana_log_cost_calculator,
@@ -135,6 +136,7 @@ def on_quit(environment, **kwargs):
     # Create a PrettyTable instance
     table = create_results_table(obs_stats)
     print(table)
+    return table
 
 
 stats = {}
@@ -227,15 +229,18 @@ def on_request(
     container_id = context["container_id"]
     start_time = context["start_time"]
     initial_log_volume = context["initial_log_volume"]
+    initial_log_entries = context["initial_log_entries"]
     file_size = log_file_size_reader(log_file, container_id) - initial_log_volume
-    num_log_entries = count_log_entries(log_file, container_id)
+    num_log_entries = count_log_entries(log_file, container_id) - initial_log_entries
     formatted_file_size = format_bytes(file_size)
     current_time = time()
     elapsed_time_in_seconds = (current_time - start_time) / 1000
-    extrapolated_size = (2592000.0 * formatted_file_size) / elapsed_time_in_seconds
+    extrapolated_size = linear_extrapolator(
+        formatted_file_size, elapsed_time_in_seconds
+    )
     extrapolated_num_log_entries = (
-        2592000.0 * num_log_entries
-    ) / elapsed_time_in_seconds
+        linear_extrapolator(num_log_entries, elapsed_time_in_seconds) / 30
+    )  # TODO: Rethink this. For nowconvert to daily value
     datadog_cost = datadog_log_cost_calculator(
         extrapolated_size, extrapolated_num_log_entries
     )
@@ -246,3 +251,5 @@ def on_request(
     stats["logs"]["datadog-cost"] = datadog_cost
     stats["logs"]["grafana-cost"] = grafana_cost
     stats["logs"]["new-relic-cost"] = new_relic_cost
+
+    return stats

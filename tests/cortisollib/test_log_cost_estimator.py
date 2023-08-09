@@ -12,6 +12,7 @@ from cortisol.cortisollib.log_cost_estimator import (
 class TestLibLogs(unittest.TestCase):
     def setUp(self):
         # Create temporary files for testing
+        self.host = "http://127.0.0.1:8080"
         self.num_users = 100
         self.spawn_rate = 10
         self.run_time = "10m"
@@ -43,6 +44,8 @@ class TestLibLogs(unittest.TestCase):
             "-f",
             "./cortisol/cortisollib/templates/locustfile.py",
             "--headless",
+            "--host",
+            self.host,
             "--users",
             str(self.num_users),
             "--spawn-rate",
@@ -56,6 +59,7 @@ class TestLibLogs(unittest.TestCase):
         ]
 
         result = render_locust_command(
+            host=self.host,
             log_file=Path(self.log_file),
             num_users=self.num_users,
             spawn_rate=self.spawn_rate,
@@ -80,6 +84,7 @@ class TestLibLogs(unittest.TestCase):
 
         result = get_cost_estimate(
             cortisol_file=self.cortisol_file,
+            host=self.host,
             log_file=self.log_file,
             num_users=self.num_users,
             spawn_rate=self.spawn_rate,

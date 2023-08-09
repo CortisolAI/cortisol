@@ -1,29 +1,14 @@
-def datadog_log_cost_calculator(
-    size, n_retained_logs
-):  # TODO: Cost estimator is a placeholder
-    """
-    Calculates the datadog log cost
-
-    :param size: Log file size in GB
-    :type size: Float
-    :return: Log cost in dollars
-    :rtype: Float
-    """
-
-    return size * 0.1
+def datadog_log_cost_calculator(logs_in_gb, log_events_in_million):
+    cost_per_gb = logs_in_gb * 0.1
+    cost_per_event_million = log_events_in_million * 2.5
+    return cost_per_gb + cost_per_event_million
 
 
-def grafana_log_cost_calculator(size):  # TODO: Cost estimator is a placeholder
-    """
-    Calculates the grafana log cost
+def grafana_log_cost_calculator(logs_in_gb):
+    if logs_in_gb <= 100:
+        return 0.0
 
-    :param size: Log file size in GB
-    :type size: Float
-    :return: Log cost in dollars
-    :rtype: Float
-    """
-
-    return size * 0.01
+    return (logs_in_gb - 100.0) * 0.5
 
 
 def new_relic_log_cost_calculator(logs_in_gb):
@@ -40,7 +25,9 @@ def new_relic_log_cost_calculator(logs_in_gb):
     Note:
         The return value is calculated based on the pricing of the New Relic Pro Plan and does not consider the free tier.
     """
-    return logs_in_gb * 0.3
+    if logs_in_gb <= 100:
+        return 0.0
+    return (logs_in_gb - 100.0) * 0.3
 
 
 def format_bytes(file_size):
