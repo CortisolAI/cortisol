@@ -59,6 +59,8 @@ class TestHooks(unittest.TestCase):
                 "log-volume": 100,
                 "datadog-cost": 50,
                 "grafana-cost": 30,
+                "new-relic-cost": 30,
+                "gcp-cloud-logging-cost": 30,
             },
         }
         self.environment.runner.stats.custom_stats = obs_stats
@@ -70,7 +72,13 @@ class TestHooks(unittest.TestCase):
     def test_on_request(
         self, mock_docker_count_log_entries, mock_docker_log_file_size_reader
     ):
-        keys = ["log-volume", "datadog-cost", "grafana-cost", "new-relic-cost"]
+        keys = [
+            "log-volume",
+            "datadog-cost",
+            "grafana-cost",
+            "new-relic-cost",
+            "gcp-cloud-logging-cost",
+        ]
 
         context = {
             "log_file": Path("/app/playground_app.log"),

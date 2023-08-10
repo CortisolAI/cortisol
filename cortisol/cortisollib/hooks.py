@@ -7,6 +7,7 @@ from cortisol.cortisollib.calculators import (
     datadog_log_cost_calculator,
     grafana_log_cost_calculator,
     new_relic_log_cost_calculator,
+    gcp_cloud_logging_log_cost_calculator,
     format_bytes,
 )
 
@@ -36,6 +37,7 @@ def colorize(value, key):
         "datadog-cost": "#774aa4",
         "grafana-cost": "#ffa500",
         "new-relic-cost": "#1CE783",
+        "gcp-cloud-logging-cost": "#4285F4",
     }
     hex_color = colors[key]
     r = int(hex_color[1:3], 16)
@@ -69,6 +71,7 @@ def add_symbol(key, value):
         "datadog-cost": f"${round(value, 2)}",
         "grafana-cost": f"${round(value, 2)}",
         "new-relic-cost": f"${round(value, 2)}",
+        "gcp-cloud-logging-cost": f"${round(value, 2)}",
     }
     symbol = symbols[key]
     return symbol
@@ -224,7 +227,13 @@ def on_request(
     """
     stats.setdefault(
         "logs",
-        {"log-volume": 0, "datadog-cost": 0, "grafana-cost": 0, "new-relic-cost": 0},
+        {
+            "log-volume": 0,
+            "datadog-cost": 0,
+            "grafana-cost": 0,
+            "new-relic-cost": 0,
+            "gcp-cloud-logging-cost": 0,
+        },
     )
     stats.setdefault("n_requests", 0)
 
@@ -249,11 +258,13 @@ def on_request(
     )
     grafana_cost = grafana_log_cost_calculator(extrapolated_size)
     new_relic_cost = new_relic_log_cost_calculator(extrapolated_size)
+    gcp_cost = gcp_cloud_logging_log_cost_calculator(extrapolated_size)
 
     stats["logs"]["log-volume"] = extrapolated_size
     stats["logs"]["datadog-cost"] = datadog_cost
     stats["logs"]["grafana-cost"] = grafana_cost
     stats["logs"]["new-relic-cost"] = new_relic_cost
+    stats["logs"]["gcp-cloud-logging-cost"] = gcp_cost
     stats["n_requests"] += 1
 
     return stats

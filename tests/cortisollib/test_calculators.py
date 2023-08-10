@@ -3,6 +3,7 @@ from cortisol.cortisollib.calculators import (
     datadog_log_cost_calculator,
     grafana_log_cost_calculator,
     new_relic_log_cost_calculator,
+    gcp_cloud_logging_log_cost_calculator,
     format_bytes,
 )
 
@@ -25,6 +26,11 @@ class TestLogCostCalculators(unittest.TestCase):
         size_gb = 103.0
         expected_cost = (size_gb - 100.0) * 0.3
         self.assertEqual(new_relic_log_cost_calculator(size_gb), expected_cost)
+
+    def test_gcp_cloud_logging_log_cost_calculator(self):
+        size_gb = 103.0
+        expected_cost = size_gb * 0.5 + size_gb * 0.01
+        self.assertEqual(gcp_cloud_logging_log_cost_calculator(size_gb), expected_cost)
 
     def test_format_bytes(self):
         file_size_bytes = 2147483648  # 2 GB in bytes

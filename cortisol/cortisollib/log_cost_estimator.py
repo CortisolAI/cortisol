@@ -180,9 +180,12 @@ def get_cost_estimate(
         print("\n")
         _loading_animation(process, run_time)
 
-        stdout_output = process.stdout.read()
+        stdout = process.stdout.read()
         print("\n")
-        print(stdout_output)
+        print(stdout)
     except KeyboardInterrupt:
         process.terminate()
+        stderr_output = process.stderr.read()
+        print(stderr_output)
+
     return process.returncode

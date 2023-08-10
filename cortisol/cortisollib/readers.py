@@ -116,6 +116,10 @@ def log_file_size_reader(
         if on_start:
             return 0
         raise FileNotFoundError(e)
+    except ValueError:
+        if on_start:
+            return 0
+        raise FileNotFoundError(file_path)
 
 
 def local_count_log_entries(file_path):
@@ -210,3 +214,7 @@ def count_log_entries(file_path: Path, container_id: str = "", on_start: bool = 
             logging.info("ON START")
             return 0
         raise FileNotFoundError(e)
+    except ValueError:
+        if on_start:
+            return 0
+        raise FileNotFoundError(file_path)
