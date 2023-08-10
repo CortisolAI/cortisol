@@ -1,6 +1,34 @@
+import time
 import subprocess
 from pathlib import Path
 from jinja2 import Template
+
+
+def _loading_animation(process, run_time):
+    animation = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+    start_time = time.time()
+    if run_time.endswith("m"):
+        total_seconds = float(run_time[:-1]) * 60
+    elif run_time.endswith("s"):
+        total_seconds = float(run_time[:-1])
+    else:
+        raise ValueError(
+            "Invalid runtime format. Use 'Xm' for minutes or 'Xs' for seconds."
+        )
+
+    while process.poll() is None:
+        elapsed_time = time.time() - start_time
+        remaining_seconds = max(0.0, total_seconds - elapsed_time)
+        minutes = int(remaining_seconds / 60)
+        seconds = int(remaining_seconds % 60)
+        timer_text = f"{minutes:02d}:{seconds:02d}"
+        animation_index = int(elapsed_time * 10) % len(animation)
+        animation_char = animation[animation_index]
+        print(
+            f"{animation_char} Hold tight cortisol is estimating your log cost {animation_char} Remaining time: {timer_text}",
+            end="\r",
+        )
+        time.sleep(0.1)
 
 
 def render_locustfile(cortisol_file: Path):
@@ -144,7 +172,17 @@ def get_cost_estimate(
     )
 
     # Execute the command and capture the output
-    process = subprocess.run(command, stdout=subprocess.PIPE)
-    output = process.stdout.decode("utf-8")
-    print(output)
+    try:
+        process = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        )
+
+        print("\n")
+        _loading_animation(process, run_time)
+
+        stdout_output = process.stdout.read()
+        print("\n")
+        print(stdout_output)
+    except KeyboardInterrupt:
+        process.terminate()
     return process.returncode

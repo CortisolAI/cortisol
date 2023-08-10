@@ -54,11 +54,12 @@ class TestHooks(unittest.TestCase):
 
     def test_on_quit(self):
         obs_stats = {
+            "n_requests": 10,
             "logs": {
                 "log-volume": 100,
                 "datadog-cost": 50,
                 "grafana-cost": 30,
-            }
+            },
         }
         self.environment.runner.stats.custom_stats = obs_stats
         result = on_quit(self.environment)

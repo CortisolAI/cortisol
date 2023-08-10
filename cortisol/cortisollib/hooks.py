@@ -100,7 +100,7 @@ def create_results_table(obs_stats):
     table = PrettyTable()
     table.field_names = ["Name", "Value"]
     # Add data to the table with color
-    for key, value in obs_stats[list(obs_stats.keys())[0]].items():
+    for key, value in obs_stats["logs"].items():
         table.add_row([colorize(key, key), colorize(add_symbol(key, value), key)])
 
     # Set the formatting options
@@ -130,9 +130,11 @@ def on_quit(environment, **kwargs):
         env.create_user(HttpUser, "http://example.com")
         env.runner.start(1, hatch_rate=1)
     """
-    print("Observability Statistics")
     obs_stats = environment.runner.stats.custom_stats
-    print(f"*----{list(obs_stats.keys())[0].upper()}----*")
+    print(f"Cortisol sent {obs_stats['n_requests']} requests to your service")
+    print("\n")
+    print("Observability Statistics")
+    print(f"*----LOGS----*")
     # Create a PrettyTable instance
     table = create_results_table(obs_stats)
     print(table)
@@ -224,6 +226,7 @@ def on_request(
         "logs",
         {"log-volume": 0, "datadog-cost": 0, "grafana-cost": 0, "new-relic-cost": 0},
     )
+    stats.setdefault("n_requests", 0)
 
     log_file = context["log_file"]
     container_id = context["container_id"]
@@ -251,5 +254,6 @@ def on_request(
     stats["logs"]["datadog-cost"] = datadog_cost
     stats["logs"]["grafana-cost"] = grafana_cost
     stats["logs"]["new-relic-cost"] = new_relic_cost
+    stats["n_requests"] += 1
 
     return stats

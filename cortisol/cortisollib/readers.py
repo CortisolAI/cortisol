@@ -1,3 +1,4 @@
+import logging
 import os
 import docker
 from pathlib import Path
@@ -78,7 +79,9 @@ def docker_log_file_size_reader(container_id: str, file_path: Path):
         raise Exception(f"Error while executing command in the container {e}")
 
 
-def log_file_size_reader(file_path: Path, container_id: str = ""):
+def log_file_size_reader(
+    file_path: Path, container_id: str = "", on_start: bool = False
+):
     """
     Reads the size of a log file from a service running locally with or without Docker.
 
@@ -89,6 +92,7 @@ def log_file_size_reader(file_path: Path, container_id: str = ""):
     Args:
         file_path (Path): Path to the log file.
         container_id (str, optional): Identifier of the Docker container (default: "").
+        on_start: (bool, optional): True if it's called on the start of the load test (default: False).
 
     Returns:
         int: The size of the log file in bytes.
@@ -100,12 +104,18 @@ def log_file_size_reader(file_path: Path, container_id: str = ""):
 
         # Read log file size from a Docker container
         container_id = "my-container"
-        log_file_size = log_file_size_reader(log_file_path, container_id)
+        log_file_size = log_file_size_reader(log_file_path, container_id, on_start=False)
     """
-    if container_id != "":
-        return docker_log_file_size_reader(container_id, file_path)
-    else:
-        return local_log_file_size_reader(file_path)
+    try:
+        if container_id != "":
+            file_size = docker_log_file_size_reader(container_id, file_path)
+            return file_size
+        file_size = local_log_file_size_reader(file_path)
+        return file_size
+    except FileNotFoundError as e:
+        if on_start:
+            return 0
+        raise FileNotFoundError(e)
 
 
 def local_count_log_entries(file_path):
@@ -165,7 +175,7 @@ def docker_count_log_entries(container_id, file_path):
         return 0
 
 
-def count_log_entries(file_path: Path, container_id: str = ""):
+def count_log_entries(file_path: Path, container_id: str = "", on_start: bool = False):
     """
     Count the number of log entries in a log file, locally or within a Docker container.
 
@@ -176,6 +186,7 @@ def count_log_entries(file_path: Path, container_id: str = ""):
     Args:
         file_path (Path): Path to the log file.
         container_id (str, optional): Identifier of the Docker container (default: "").
+        on_start: (bool, optional): True if it's called on the start of the load test (default: False).
 
     Returns:
         int: The number of log entries in the file in millions.
@@ -188,10 +199,14 @@ def count_log_entries(file_path: Path, container_id: str = ""):
         # Count log entries from a Docker container log file
         container_id = "my-container"
         log_file_path = Path("/app/log_file.log")
-        entry_count = count_log_entries(log_file_path, container_id)
+        entry_count = count_log_entries(log_file_path, container_id, False)
     """
-
-    if container_id != "":
-        return docker_count_log_entries(container_id, file_path)
-    else:
+    try:
+        if container_id != "":
+            return docker_count_log_entries(container_id, file_path)
         return local_count_log_entries(file_path)
+    except FileNotFoundError as e:
+        if on_start:
+            logging.info("ON START")
+            return 0
+        raise FileNotFoundError(e)

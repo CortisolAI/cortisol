@@ -72,13 +72,21 @@ class TestLibLogs(unittest.TestCase):
 
     @patch("cortisol.cortisollib.readers.log_file_size_reader")
     @patch("cortisol.cortisollib.log_cost_estimator.subprocess")
-    def test_get_cost_estimate(self, mock_subprocess, mock_log_file_size_reader):
-        process = mock_subprocess.run.return_value = Mock(
-            stdout=b"mocked_stdout",
-            stderr=b"mocked_stderr",
-            returncode=0,
+    @patch("cortisol.cortisollib.log_cost_estimator.render_locustfile")
+    def test_get_cost_estimate(
+        self, mock_render_locustfile, mock_subprocess, mock_log_file_size_reader
+    ):
+        process_mock = Mock(
+            stdout=b"mocked_stdout", stderr=b"mocked_stderr", returncode=0
         )
+        mock_subprocess.Popen.return_value.communicate.return_value = (
+            process_mock.stdout,
+            process_mock.stderr,
+        )
+        mock_subprocess.Popen.return_value.returncode = process_mock.returncode
         mock_log_file_size_reader.return_value = 1024
+        mock_render_locustfile.return_value = 0
+
         cortisol_input = "user_data: test"
         self.cortisol_file.write_text(cortisol_input)
 
@@ -92,4 +100,4 @@ class TestLibLogs(unittest.TestCase):
             container_id=self.container_id,
         )
 
-        self.assertEqual(result, process.returncode)
+        self.assertEqual(result, 0)

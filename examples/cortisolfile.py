@@ -28,8 +28,10 @@ class WebsiteUser(HttpUser):
         self.initial_log_volume = log_file_size_reader(
             file_path=self.environment.parsed_options.log_file,
             container_id=self.environment.parsed_options.container_id,
+            on_start=True,
         )
         self.initial_log_entries = count_log_entries(
             file_path=self.environment.parsed_options.log_file,
             container_id=self.environment.parsed_options.container_id,
+            on_start=True,
         )
