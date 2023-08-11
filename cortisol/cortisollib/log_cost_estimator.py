@@ -1,3 +1,4 @@
+import ast
 import time
 import subprocess
 from pathlib import Path
@@ -31,6 +32,20 @@ def _loading_animation(process, run_time):
         time.sleep(0.1)
 
 
+def _get_classes_extending_httpuser(code):
+    tree = ast.parse(code)
+
+    class_names = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef):
+            for base in node.bases:
+                if isinstance(base, ast.Name) and base.id == "CortisolHttpUser":
+                    class_names.append(node.name)
+
+    formatted_string = "[" + ", ".join(class_names) + "]"
+    return formatted_string
+
+
 def render_locustfile(cortisol_file: Path):
     """
     Render a Locustfile template with user input and save the result.
@@ -59,9 +74,12 @@ def render_locustfile(cortisol_file: Path):
 
     with open(cortisol_file, "r") as user_input_file:
         user_input = user_input_file.read()
+        user_classes = _get_classes_extending_httpuser(user_input)
 
     # Render the template with the user input
-    rendered_content = template.render(cortisolfile=user_input)
+    rendered_content = template.render(
+        cortisolfile=user_input, user_classes=user_classes
+    )
 
     with open("./cortisol/cortisollib/templates/locustfile.py", "w") as merged_file:
         merged_file.write(rendered_content)

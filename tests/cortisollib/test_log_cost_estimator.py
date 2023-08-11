@@ -6,6 +6,7 @@ from cortisol.cortisollib.log_cost_estimator import (
     render_locustfile,
     render_locust_command,
     get_cost_estimate,
+    _get_classes_extending_httpuser,
 )
 
 
@@ -101,3 +102,22 @@ class TestLibLogs(unittest.TestCase):
         )
 
         self.assertEqual(result, 0)
+
+    def test_single_class(self):
+        code = """
+class MyUser(CortisolHttpUser):
+    pass
+"""
+        result = _get_classes_extending_httpuser(code)
+        self.assertEqual(result, "[MyUser]")
+
+    def test_multiple_classes(self):
+        code = """
+class MyUser(CortisolHttpUser):
+    pass
+
+class AnotherUser(CortisolHttpUser):
+    pass
+        """
+        result = _get_classes_extending_httpuser(code)
+        self.assertEqual(result, "[MyUser, AnotherUser]")

@@ -24,4 +24,4 @@ events.init.add_listener(on_init)
 events.quitting.add_listener(on_quit)
 events.request.add_listener(on_request)
 
-environment = Environment(user_classes=[WebsiteUser], events=events)
+environment = Environment(user_classes={{ user_classes }}, events=events)
