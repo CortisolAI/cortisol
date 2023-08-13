@@ -30,7 +30,33 @@ At the command line:
 
 ## Getting started
 
-TODO
+First things first! We need a RESTful service and so you'll need to do the following steps:
+
+1. Clone this example repo https://github.com/CortisolAI/getting-started-example
+2. `cd getting-started-example`
+3. `mkvirtualenv getting-started-cortisol`
+4. `python -m app.main` which will make the service available at `http://127.0.0.1:8080/`
+
+And, now, it's time to create your first cortisol file. Copy and paste the following in a file named `cortisolfile.py`:
+
+```python
+from locust import task
+
+from cortisol.cortisollib.users import CortisolHttpUser
+
+
+class WebsiteUser(CortisolHttpUser):
+    @task
+    def my_task(self):
+        self.client.get("/")
+
+```
+
+Go to the virtualenv where the cortisol library is installed and run the following command in the terminal. Make sure to change the base path for the `--log-file` argument:
+
+```terminal
+cortisol logs cost-estimate --host http://127.0.0.1:8080 --users 10 --spawn-rate 5 --run-time 10s --cortisol-file cortisolfile.py --log-file /some/path/getting-started-example/cortisol_app.log
+```
 
 ## Commands
 
