@@ -252,7 +252,7 @@ def on_request(
     )
     extrapolated_num_log_entries = (
         linear_extrapolator(num_log_entries, elapsed_time_in_seconds) / 30
-    )  # TODO: Rethink this. For nowconvert to daily value
+    )
     datadog_cost = datadog_log_cost_calculator(
         extrapolated_size, extrapolated_num_log_entries
     )

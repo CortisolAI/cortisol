@@ -10,7 +10,7 @@ def datadog_log_cost_calculator(logs_in_gb, log_events_in_million):
         log_events_in_million (int): Number of log events in millions.
 
     Returns:
-        tuple(float, float): Estimated annual cost of logging in USD for log ingestion and log retention/storage.
+        float: Estimated annual cost of logging in USD for log ingestion plus log retention/storage.
 
     Note:
         The estimated cost is returned based on the assumption that the Datadog Pro Plan is chosen, billed annually and a 30 day retention is chosen.
@@ -32,7 +32,7 @@ def grafana_log_cost_calculator(logs_in_gb):
         float: The estimated cost of the logs in USD currency for the Grafana Cloud Pro Plan.
 
     Example:
-        >>> grafana_log_cost(100)
+        >>> grafana_log_cost_calculator(100)
         50.0
 
     Note:
@@ -53,7 +53,7 @@ def new_relic_log_cost_calculator(logs_in_gb):
     Returns:
         float: The estimated cost of the logs in USD currency for the New Relic Pro Plan.
     Example:
-        >>> new_relic_log_cost(120)
+        >>> new_relic_log_cost_calculator(120)
         36.0
     Note:
         The return value is calculated based on the pricing of the New Relic Pro Plan and does consider the free tier.
@@ -85,7 +85,7 @@ def gcp_cloud_logging_log_cost_calculator(logs_in_gb):
     Args:
         logs_in_gb (float): Amount of data logs in gigabytes.
     Returns:
-        tuple(float, float): Estimated annual cost of logging in USD for log ingestion and log retention/storage.
+        float: Estimated annual cost of logging in USD for log ingestion plus log retention/storage.
     Note:
         The estimated cost is returned based on the assumption that logs are going to be retainted more than 30 days.
         No cost is incurred with default retention period https://cloud.google.com/logging/quotas#logs_retention_periods.
