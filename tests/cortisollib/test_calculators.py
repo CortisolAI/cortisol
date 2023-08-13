@@ -29,7 +29,7 @@ class TestLogCostCalculators(unittest.TestCase):
 
     def test_gcp_cloud_logging_log_cost_calculator(self):
         size_gb = 103.0
-        expected_cost = size_gb * 0.5 + size_gb * 0.01
+        expected_cost = (size_gb - 50.0) * 0.5 + size_gb * 0.01
         self.assertEqual(gcp_cloud_logging_log_cost_calculator(size_gb), expected_cost)
 
     def test_format_bytes(self):
