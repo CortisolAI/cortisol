@@ -1,0 +1,7 @@
+host: "http://127.0.0.1:8080"
+log-file: "/app/playground_app.log"
+users: 10
+spawn-rate: 5
+run-time: "10s"
+cortisol-file: "./examples/cortisolfile.py"
+container-id: "1212aa67e530af75b3310e1e5b30261b36844a6748df1d321088c4d48a20ebd0"

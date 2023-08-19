@@ -1,0 +1,27 @@
+from time import time
+from locust.env import Environment
+from locust import task, events, HttpUser, between
+
+from cortisol.cortisollib.readers import log_file_size_reader
+from cortisol.cortisollib.hooks import on_quit, on_request, stats, on_init
+
+
+@events.init_command_line_parser.add_listener
+def _(parser):
+    parser.add_argument("--log-file", type=str, default="/app/playground_app.log")
+    parser.add_argument(
+        "--container-id",
+        type=str,
+        env_var="CONTAINER_ID",
+        default="1212aa67e530af75b3310e1e5b30261b36844a6748df1d321088c4d48a20ebd0",
+    )
+
+
+{{ cortisolfile }}
+
+
+events.init.add_listener(on_init)
+events.quitting.add_listener(on_quit)
+events.request.add_listener(on_request)
+
+environment = Environment(user_classes={{ user_classes }}, events=events)

@@ -13,6 +13,10 @@ cortisol = "cortisol.main:app"
 python = "^3.8"
 typer = {extras = ["all"], version = "^0.9.0"}
 pyyaml = "^6.0.1"
+docker = "^6.1.3"
+jinja2 = "^3.1.2"
+prettytable = "^3.8.0"
+locust = "^2.16.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"

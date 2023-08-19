@@ -30,7 +30,33 @@ At the command line:
 
 ## Getting started
 
-TODO
+First things first! We need a RESTful service and so you'll need to do the following steps:
+
+1. Clone this example repo https://github.com/CortisolAI/getting-started-example
+2. `cd getting-started-example`
+3. `mkvirtualenv getting-started-cortisol`
+4. `python -m app.main` which will make the service available at `http://127.0.0.1:8080/`
+
+And, now, it's time to create your first cortisol file. Copy and paste the following in a file named `cortisolfile.py`:
+
+```python
+from locust import task
+
+from cortisol.cortisollib.users import CortisolHttpUser
+
+
+class WebsiteUser(CortisolHttpUser):
+    @task
+    def my_task(self):
+        self.client.get("/")
+
+```
+
+Go to the virtualenv where the cortisol library is installed and run the following command in the terminal. Make sure to change the base path for the `--log-file` argument:
+
+```terminal
+cortisol logs cost-estimate --host http://127.0.0.1:8080 --users 10 --spawn-rate 5 --run-time 10s --cortisol-file cortisolfile.py --log-file /some/path/getting-started-example/cortisol_app.log
+```
 
 ## Commands
 
@@ -50,7 +76,7 @@ Forecast log costs pre-production with Cortisol for Datadog, New Relic, and Graf
 
 ### Example
 
-    cortisol logs cost-estimate --host http://10.20.31.32:8000 --users 100 --spawn-rate 30 --run-time 20m -cortisol-file some_cortisol_file.py
+    cortisol logs cost-estimate --host http://10.20.31.32:8000 --users 10 --spawn-rate 5 --run-time 10s --cortisol-file ./examples/cortisolfile.py --log-file /app/playground_app.log
 
 #### Required Flags - Option 1
 
@@ -71,6 +97,10 @@ Forecast log costs pre-production with Cortisol for Datadog, New Relic, and Graf
 All the latter options plus the following in case your application run in a Docker container:
 
 `-c, --container-id TEXT`      Optional docker container id where your application runs
+
+##### Example
+    cortisol logs cost-estimate --host http://127.0.0.1:8080 --users 100 --spawn-rate 5 --run-time 10s --cortisol-file ./examples/cortisolfile.py --log-file /app/playground_app.log --container-id 1212aa67e530af75b3310e1e5b30261b36844a6748df1d321088c4d48a20ebd0
+
 
 #### Required Flags - Option 3
 
