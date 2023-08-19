@@ -9,7 +9,7 @@
 
 A command-line tool that provides cost estimation and forecasting for main observability tools like [Datadog](https://www.datadoghq.com/), [New Relic](https://newrelic.com/), and [Grafana](https://grafana.com/), helping users plan and optimize their log, metric and trace costs pre-production.
 
-For detailed reference to Cortisol commands please go to: [Read the Docs](TODO)
+For detailed reference to Cortisol commands please go to: [Read the Docs](https://cortisolai.github.io/cortisol/)
 
 ## Installation
 
