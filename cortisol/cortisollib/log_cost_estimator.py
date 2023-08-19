@@ -2,7 +2,10 @@ import ast
 import time
 import subprocess
 from pathlib import Path
+import os
 from jinja2 import Template
+
+_FILE_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def _loading_animation(process: subprocess.Popen, run_time: str, timeout: int = 5):
@@ -67,7 +70,7 @@ def render_locustfile(cortisol_file: Path):
         rendered_content = render_locustfile(cortisol_file)
     """
     with open(
-        "./cortisol/cortisollib/templates/cli_loadtest.py.j2", "r"
+        os.path.join(_FILE_DIR_PATH, "./templates/cli_loadtest.py.j2"), "r"
     ) as template_file:
         template_content = template_file.read()
 
@@ -83,7 +86,9 @@ def render_locustfile(cortisol_file: Path):
         cortisolfile=user_input, user_classes=user_classes
     )
 
-    with open("./cortisol/cortisollib/templates/locustfile.py", "w") as merged_file:
+    with open(
+        os.path.join(_FILE_DIR_PATH, "./templates/locustfile.py"), "w"
+    ) as merged_file:
         merged_file.write(rendered_content)
 
     return rendered_content
@@ -127,7 +132,7 @@ def render_locust_command(
     command = [
         "locust",
         "-f",
-        "./cortisol/cortisollib/templates/locustfile.py",
+        os.path.join(_FILE_DIR_PATH, "./templates/locustfile.py"),
         "--headless",
         "--host",
         host,
