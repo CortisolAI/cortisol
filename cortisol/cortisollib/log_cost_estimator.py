@@ -5,7 +5,7 @@ from pathlib import Path
 from jinja2 import Template
 
 
-def _loading_animation(process, run_time):
+def _loading_animation(process: subprocess.Popen, run_time: str, timeout: int = 5):
     animation = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
     start_time = time.time()
     if run_time.endswith("m"):
@@ -30,6 +30,8 @@ def _loading_animation(process, run_time):
             end="\r",
         )
         time.sleep(0.1)
+        if int(remaining_seconds) == 0:
+            process.wait(timeout)
 
 
 def _get_classes_extending_httpuser(code):
@@ -201,9 +203,14 @@ def get_cost_estimate(
         stdout = process.stdout.read()
         print("\n")
         print(stdout)
-    except KeyboardInterrupt:
+    except KeyboardInterrupt as e:
+        process.terminate()
+        stderr_output = process.stderr.read()
+        raise KeyboardInterrupt(stderr_output) from e
+    except subprocess.TimeoutExpired as e:
         process.terminate()
         stderr_output = process.stderr.read()
         print(stderr_output)
+        raise TimeoutError(stderr_output) from e
 
     return process.returncode

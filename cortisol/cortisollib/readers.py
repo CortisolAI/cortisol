@@ -58,7 +58,10 @@ def docker_log_file_size_reader(container_id: str, file_path: Path):
         log_file_path = Path("/app/playground_app.log")
         log_file_size = docker_log_file_size_reader(container_id, log_file_path)
     """
-    docker_client = docker.from_env()
+    try:
+        docker_client = docker.from_env()
+    except docker.errors.DockerException as e:
+        raise Exception("Cannot start docker client") from e
     try:
         container = docker_client.containers.get(container_id)
         exec_result = container.exec_run(
@@ -167,7 +170,10 @@ def docker_count_log_entries(container_id, file_path):
         file_path = "/app/log_file.log"
         entry_count = docker_count_log_entries(container_id, file_path)
     """
-    docker_client = docker.from_env()
+    try:
+        docker_client = docker.from_env()
+    except docker.errors.DockerException as e:
+        raise Exception("Cannot start docker client") from e
 
     try:
         container = docker_client.containers.get(container_id)
