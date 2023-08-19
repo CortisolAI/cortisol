@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcortisol=self.webpackChunkcortisol||[]).push([[315],{4564:l=>{l.exports=JSON.parse('{"label":"hola","permalink":"/cortisol/blog/tags/hola","allTagsPath":"/cortisol/blog/tags","count":1}')}}]);
