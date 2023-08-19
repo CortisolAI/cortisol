@@ -2,7 +2,7 @@
 name = "cortisol"
 version = "0.1.0"
 description = "Accurately forecast log costs pre-production with Cortisol for Datadog, New Relic, and Grafana 💰📉"
-authors = ["pm3310 <pavlos@cortisol.ai>, dvarelas <dionysis@cortisol.ai>"]
+authors = ["pm3310 <pavlos@cortisol.ai>", "dvarelas <dionysis@cortisol.ai>"]
 license = "Apache License 2.0"
 readme = "README.md"
 
