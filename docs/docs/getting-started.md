@@ -26,7 +26,7 @@ First things first! We need a RESTful service and so you'll need to do the follo
 3. `mkvirtualenv getting-started-cortisol`
 4. `python -m app.main` which will make the service available at `http://127.0.0.1:8080/`
 
-And, now, it's time to create your first cortisol file. Copy and paste the following in a file named `cortisolfile.py`:
+And, now, it's time to create your first cortisol file. Copy and paste the following in a file named `cortisolfile.py` in the root path of getting-started-example repo:
 
 ```python
 from locust import task
@@ -49,10 +49,10 @@ You can define multiple tasks for each resource of your web service.
 
 Almost there! It's time to run the cortisol command and get your first log cost estimates. Before we do that, make sure you know the root path of where the getting-started-example repo is located. For illustration purposes, let's assume the path is `/some/path/getting-started-example/`.
 
-Go to the virtualenv where the cortisol library is installed and run the following command in the terminal. Make sure to change the base path for the `--log-file` argument:
+Switch to another terminal window, enable the `getting-started-cortisol` virtual env and run the following command in the terminal:
 
 ```terminal
-cortisol logs cost-estimate --host http://127.0.0.1:8080 --users 10 --spawn-rate 5 --run-time 10s --cortisol-file cortisolfile.py --log-file /some/path/getting-started-example/cortisol_app.log
+cortisol logs cost-estimate --host http://127.0.0.1:8080 --users 10 --spawn-rate 5 --run-time 10s --cortisol-file cortisolfile.py --log-file cortisol_app.log
 ```
 
 You'll get some results after 10 seconds that look like these ones:
@@ -65,8 +65,8 @@ Before we dive into the results, let's understand what load testing ran in the b
 - `--users 10` The peak number of concurrent users is 10
 - `--spawn-rate 5` Spawn 5 users per second
 - `--run-time 10s` Stop after 10 seconds
-- `--cortisol-file ./examples/cortisolfile.py` path to cortisolfile
-- `--log-file /some/path/getting-started-example/cortisol_app.log` path to where logs are saved
+- `--cortisol-file cortisolfile.py` path to cortisolfile
+- `--log-file cortisol_app.log` path to where logs are saved
 
 Let's get back to the results. The total log volume of running this FAST API with the defined user behaviour in the cortisolfile and in the cortisol command arguments for a month is going to be ~346GB. The log costs per observability tool are explained below:
 
@@ -87,7 +87,12 @@ Let's do the same but run the FAST API in a Docker container.
 3. `make build` to build the Docker image
 4. `make run` to run the container. The printed container ID is important. This command will make the service available at `http://127.0.0.1:8080/`
 
-You will need to pass the container ID, and just define the log file name. No need to pass the entire path to the log file. Example:
+On another terminal window:
+
+1. Create a virtualenv `mkvirtualenv getting-started-cortisol`
+2. `pip install cortisol`
+
+You will need to pass the container ID, and just define the log file name. No need to pass the entire path to the log file:
 
 ```terminal
 cortisol logs cost-estimate --host http://127.0.0.1:8080 --users 10 --spawn-rate 5 --run-time 10s --cortisol-file cortisolfile.py --container-id d3a45b9e27ca03b52d2fe9d4c7c55f8254829555c96c6b79bc950caaf33719f8 --cortisol-file ./examples/cortisolfile.py --log-file cortisol_app.log

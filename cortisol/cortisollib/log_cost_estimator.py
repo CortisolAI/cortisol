@@ -2,10 +2,13 @@ import ast
 import time
 import subprocess
 from pathlib import Path
+import os
 from jinja2 import Template
 
+_FILE_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 
-def _loading_animation(process, run_time):
+
+def _loading_animation(process: subprocess.Popen, run_time: str, timeout: int = 5):
     animation = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
     start_time = time.time()
     if run_time.endswith("m"):
@@ -30,6 +33,8 @@ def _loading_animation(process, run_time):
             end="\r",
         )
         time.sleep(0.1)
+        if int(remaining_seconds) == 0:
+            process.wait(timeout)
 
 
 def _get_classes_extending_httpuser(code):
@@ -65,7 +70,7 @@ def render_locustfile(cortisol_file: Path):
         rendered_content = render_locustfile(cortisol_file)
     """
     with open(
-        "./cortisol/cortisollib/templates/cli_loadtest.py.j2", "r"
+        os.path.join(_FILE_DIR_PATH, "./templates/cli_loadtest.py.j2"), "r"
     ) as template_file:
         template_content = template_file.read()
 
@@ -81,7 +86,9 @@ def render_locustfile(cortisol_file: Path):
         cortisolfile=user_input, user_classes=user_classes
     )
 
-    with open("./cortisol/cortisollib/templates/locustfile.py", "w") as merged_file:
+    with open(
+        os.path.join(_FILE_DIR_PATH, "./templates/locustfile.py"), "w"
+    ) as merged_file:
         merged_file.write(rendered_content)
 
     return rendered_content
@@ -125,7 +132,7 @@ def render_locust_command(
     command = [
         "locust",
         "-f",
-        "./cortisol/cortisollib/templates/locustfile.py",
+        os.path.join(_FILE_DIR_PATH, "./templates/locustfile.py"),
         "--headless",
         "--host",
         host,
@@ -201,9 +208,14 @@ def get_cost_estimate(
         stdout = process.stdout.read()
         print("\n")
         print(stdout)
-    except KeyboardInterrupt:
+    except KeyboardInterrupt as e:
+        process.terminate()
+        stderr_output = process.stderr.read()
+        raise KeyboardInterrupt(stderr_output) from e
+    except subprocess.TimeoutExpired as e:
         process.terminate()
         stderr_output = process.stderr.read()
         print(stderr_output)
+        raise TimeoutError(stderr_output) from e
 
     return process.returncode
