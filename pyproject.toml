@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cortisol"
-version = "0.2.0"
+version = "0.2.1"
 description = "Accurately forecast log costs pre-production with Cortisol for Datadog, New Relic, and Grafana 💰📉"
 authors = ["pm3310 <pavlos@cortisol.ai>", "dvarelas <dionysis@cortisol.ai>"]
 license = "Apache License 2.0"
