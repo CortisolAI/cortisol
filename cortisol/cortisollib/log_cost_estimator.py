@@ -29,7 +29,7 @@ def _loading_animation(process: subprocess.Popen, run_time: str, timeout: int = 
         animation_index = int(elapsed_time * 10) % len(animation)
         animation_char = animation[animation_index]
         print(
-            f"{animation_char} Hold tight cortisol is estimating your log cost {animation_char} Remaining time: {timer_text}",
+            f"{animation_char} Hold tight cortisol is estimating your monthly log cost {animation_char} Remaining time: {timer_text}",
             end="\r",
         )
         time.sleep(0.1)

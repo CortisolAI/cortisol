@@ -68,7 +68,7 @@ Before we dive into the results, let's understand what load testing ran in the b
 - `--cortisol-file cortisolfile.py` path to cortisolfile
 - `--log-file cortisol_app.log` path to where logs are saved
 
-Let's get back to the results. The total log volume of running this FAST API with the defined user behaviour in the cortisolfile and in the cortisol command arguments for a month is going to be ~346GB. The log costs per observability tool are explained below:
+Let's get back to the results. The total log volume per month of running this FAST API with the defined user behaviour in the cortisolfile and in the cortisol command arguments is going to be available at the top of the table. The log costs per observability tool are per month and are explained below:
 
 - Datadog: 30 day log retention and billed annually
 - Grafana: Cloud Pro plan is chosen
