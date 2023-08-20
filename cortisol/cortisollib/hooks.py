@@ -101,7 +101,7 @@ def create_results_table(obs_stats):
         print(result_table)
     """
     table = PrettyTable()
-    table.field_names = ["Name", "Value"]
+    table.field_names = ["Name", "Value per month"]
     # Add data to the table with color
     for key, value in obs_stats["logs"].items():
         table.add_row([colorize(key, key), colorize(add_symbol(key, value), key)])
