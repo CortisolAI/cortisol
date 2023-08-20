@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest.mock import Mock, patch
 from pathlib import Path
@@ -9,6 +10,10 @@ from cortisol.cortisollib.log_cost_estimator import (
     _get_classes_extending_httpuser,
 )
 
+_FILE_DIR_PATH = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "cortisol", "cortisollib")
+)
+
 
 class TestLibLogs(unittest.TestCase):
     def setUp(self):
@@ -18,7 +23,7 @@ class TestLibLogs(unittest.TestCase):
         self.spawn_rate = 10
         self.run_time = "10m"
         self.container_id = "123mock"
-        self.cortisol_file = Path("test_cortisol.txt")
+        self.cortisol_file = Path("test_cortisol.py")
         self.log_file = Path("test_log.txt")
 
     def tearDown(self):
@@ -43,7 +48,7 @@ class TestLibLogs(unittest.TestCase):
         expected_command = [
             "locust",
             "-f",
-            "./cortisol/cortisollib/templates/locustfile.py",
+            os.path.join(_FILE_DIR_PATH, "./templates/locustfile.py"),
             "--headless",
             "--host",
             self.host,
