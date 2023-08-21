@@ -15,6 +15,8 @@ At the command line:
 
     pip install cortisol
 
+If you have an Apple M1 CPU, we suggest installing using Poetry as a dependency management. Otherwise, the underline gevent library may not work.
+
 ## Your first log cost estimation
 
 Let's dive right in and get our hands dirty with Cortisol! As an integral part of your software development workflow, Cortisol CLI brings predictability to managing log costs. 
