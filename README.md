@@ -23,6 +23,8 @@ At the command line:
 
     pip install cortisol
 
+If you have an Apple M1 CPU, we suggest installing using Poetry as a dependency management. Otherwise, the underline gevent library may not work.
+
 ## Getting started
 
 First things first! We need a RESTful service and so you'll need to do the following steps:
