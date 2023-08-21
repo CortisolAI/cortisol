@@ -211,6 +211,7 @@ def get_cost_estimate(
     except KeyboardInterrupt as e:
         process.terminate()
         stderr_output = process.stderr.read()
+        print(stderr_output)
         raise KeyboardInterrupt(stderr_output) from e
     except subprocess.TimeoutExpired as e:
         process.terminate()
