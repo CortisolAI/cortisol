@@ -4,6 +4,11 @@
 <p align="center">
     <em>Cortisol, accurately forecast log costs pre-production.</em>
 </p>
+<p align="center">
+<a href="https://github.com/cortisolai/cortisol/actions?query=workflow%3ACI" target="_blank">
+    <img src="https://github.com/cortisolai/cortisol/workflows/CI/badge.svg" alt="Test">
+</a>
+</p>
 
 # cortisol
 
