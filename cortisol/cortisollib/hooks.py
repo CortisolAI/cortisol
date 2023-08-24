@@ -134,6 +134,7 @@ def on_quit(environment, **kwargs):
         env.runner.start(1, hatch_rate=1)
     """
     obs_stats = environment.runner.stats.custom_stats
+    print("\n")
     print(f"Cortisol sent {obs_stats['n_requests']} requests to your service")
     print("\n")
     print("Observability Statistics")
