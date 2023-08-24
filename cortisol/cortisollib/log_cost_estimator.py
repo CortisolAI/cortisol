@@ -1,4 +1,5 @@
 import ast
+import threading
 import time
 import subprocess
 from pathlib import Path
@@ -8,21 +9,14 @@ from jinja2 import Template
 _FILE_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
-def _loading_animation(process: subprocess.Popen, run_time: str, timeout: int = 5):
+def animation_process(timeout, done):
     animation = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
     start_time = time.time()
-    if run_time.endswith("m"):
-        total_seconds = float(run_time[:-1]) * 60
-    elif run_time.endswith("s"):
-        total_seconds = float(run_time[:-1])
-    else:
-        raise ValueError(
-            "Invalid runtime format. Use 'Xm' for minutes or 'Xs' for seconds."
-        )
-
-    while process.poll() is None:
+    while True:
         elapsed_time = time.time() - start_time
-        remaining_seconds = max(0.0, total_seconds - elapsed_time)
+        if done.is_set():
+            break
+        remaining_seconds = max(0.0, timeout - elapsed_time)
         minutes = int(remaining_seconds / 60)
         seconds = int(remaining_seconds % 60)
         timer_text = f"{minutes:02d}:{seconds:02d}"
@@ -33,8 +27,6 @@ def _loading_animation(process: subprocess.Popen, run_time: str, timeout: int = 
             end="\r",
         )
         time.sleep(0.1)
-        if int(remaining_seconds) == 0:
-            process.wait(timeout)
 
 
 def _get_classes_extending_httpuser(code):
@@ -196,27 +188,60 @@ def get_cost_estimate(
         host, log_file, num_users, spawn_rate, run_time, container_id
     )
 
-    # Execute the command and capture the output
+    done = threading.Event()
+    process = None
+    animation_thread = None
     try:
         process = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
 
-        print("\n")
-        _loading_animation(process, run_time)
+        if run_time.endswith("m"):
+            total_seconds = float(run_time[:-1]) * 60
+        elif run_time.endswith("s"):
+            total_seconds = float(run_time[:-1])
+        else:
+            raise ValueError(
+                "Invalid runtime format. Use 'Xm' for minutes or 'Xs' for seconds."
+            )
 
-        stdout = process.stdout.read()
-        print("\n")
-        print(stdout)
+        animation_thread = threading.Thread(
+            target=animation_process,
+            args=(
+                total_seconds,
+                done,
+            ),
+        )
+        animation_thread.start()
+
+        try:
+            output, error = process.communicate(timeout=total_seconds + 2)
+        except subprocess.TimeoutExpired as e:
+            process.kill()
+            output, error = process.communicate()
+            stderr_output = error.strip()
+            print(stderr_output)
+            raise TimeoutError(stderr_output) from e
+
+        if process.returncode == 0:
+            print(output)
+        else:
+            print(error.strip())
+
     except KeyboardInterrupt as e:
-        process.terminate()
-        stderr_output = process.stderr.read()
-        print(stderr_output)
-        raise KeyboardInterrupt(stderr_output) from e
-    except subprocess.TimeoutExpired as e:
-        process.terminate()
-        stderr_output = process.stderr.read()
-        print(stderr_output)
-        raise TimeoutError(stderr_output) from e
+        if process is not None:
+            process.terminate()
+            _, error = process.communicate()
+            stderr_output = error.strip()
+            print(stderr_output)
+            raise KeyboardInterrupt(stderr_output) from e
+        raise KeyboardInterrupt from e
+
+    finally:
+        if process and process.poll() is None:
+            process.terminate()
+        if animation_thread is not None:
+            done.set()
+            animation_thread.join()
 
     return process.returncode
