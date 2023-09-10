@@ -12,7 +12,7 @@
 
 # cortisol
 
-Cortisol is an open-source command-line tool designed specifically for web services. It offers easy-to-use cost estimation and forecasting capabilities tailroed to main observability tools like [Datadog](https://www.datadoghq.com/), [New Relic](https://newrelic.com/), [Grafana](https://grafana.com/) and [GCP Cloud Logging](https://cloud.google.com/logging). Cortisol assists users in planning and optimizing their log costs before deploying their web services. It operates on a foundation inspired by [Locust](https://locust.io/), allowing users to define user behavior using a regular Python script 💰📉.
+Cortisol is an open-source command-line tool designed specifically for web services. It offers easy-to-use cost estimation and forecasting capabilities tailored to main observability tools like [Datadog](https://www.datadoghq.com/), [New Relic](https://newrelic.com/), [Grafana](https://grafana.com/) and [GCP Cloud Logging](https://cloud.google.com/logging). Cortisol assists users in planning and optimizing their log costs before deploying their web services. It operates on a foundation inspired by [Locust](https://locust.io/), allowing users to define user behavior using a regular Python script 💰📉.
 
 For detailed reference to Cortisol commands please go to: [Read the Docs](https://cortisolai.github.io/cortisol/)
 
