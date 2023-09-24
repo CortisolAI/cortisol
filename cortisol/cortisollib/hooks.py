@@ -1,4 +1,5 @@
 import csv
+import uuid
 from time import time
 from prettytable import PrettyTable
 
@@ -145,8 +146,10 @@ def on_quit(environment, **kwargs):
     print(table)
     if obs_stats["stats_file"]:
         with open(obs_stats["stats_file"], "w") as f:
-            header = ["run_id", "n_requests"] + list(obs_stats["logs"].keys())
-            values = [f"cortisol_{int(time())}", obs_stats["n_requests"]] + list(
+            header = ["run_id", "timestamp", "n_requests"] + list(
+                obs_stats["logs"].keys()
+            )
+            values = [uuid.uuid1(), int(time()), obs_stats["n_requests"]] + list(
                 obs_stats["logs"].values()
             )
             w = csv.writer(f, delimiter=",")
