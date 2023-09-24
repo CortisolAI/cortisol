@@ -20,7 +20,7 @@ For detailed reference to Cortisol commands please go to: [Read the Docs](https:
 
 ### Prerequisites
 
-cortisol requires the following one of the following Python versions: 3.8, 3.9, 3.10 or 3.11
+Cortisol requires one of the following Python versions: 3.8, 3.9, 3.10 or 3.11
 
 ### Install cortisol
 
