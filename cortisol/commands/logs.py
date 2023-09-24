@@ -77,6 +77,12 @@ def cost_estimate(
         help="Optional docker container id where your application runs",
     ),
     config: Path = typer.Option(None, "--config", help="Path to config file"),
+    stats_file: Path = typer.Option(
+        None,
+        "-s",
+        "--stats-file",
+        help="Optional stats file path where the stats will be stored as csv",
+    ),
 ):
     """
     Forecast log costs pre-production with Cortisol for Datadog, New Relic, and Grafana
@@ -103,6 +109,7 @@ def cost_estimate(
             spawn_rate = data["spawn-rate"]
             run_time = data["run-time"]
             container_id = data.get("container-id", "")
+            stats_file = data.get("stats-file", None)
         except (FileNotFoundError, ValueError, KeyError) as e:
             typer.echo(str(e))
             raise typer.Abort()
@@ -119,6 +126,7 @@ def cost_estimate(
         spawn_rate=spawn_rate,
         run_time=run_time,
         container_id=container_id,
+        stats_file=stats_file,
     )
 
 

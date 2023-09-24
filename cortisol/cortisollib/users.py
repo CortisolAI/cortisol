@@ -74,5 +74,6 @@ class CortisolHttpUser(User):
             "start_time": self.start_time,
             "initial_log_volume": self.initial_log_volume,
             "initial_log_entries": self.initial_log_entries,
+            "stats_file": self.environment.parsed_options.stats_file,
         }
         return default_context

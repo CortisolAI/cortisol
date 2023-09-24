@@ -1,3 +1,4 @@
+import os
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -52,8 +53,9 @@ class TestHooks(unittest.TestCase):
         on_init(self.environment)
         self.assertEqual({}, self.environment.runner.stats.custom_stats)
 
-    def test_on_quit(self):
+    def test_on_quit_table(self):
         obs_stats = {
+            "stats_file": None,
             "n_requests": 10,
             "logs": {
                 "log-volume": 100,
@@ -66,6 +68,25 @@ class TestHooks(unittest.TestCase):
         self.environment.runner.stats.custom_stats = obs_stats
         result = on_quit(self.environment)
         self.assertIsInstance(result, prettytable.prettytable.PrettyTable)
+
+    def test_on_quit_stats_file(self):
+        stats_file_path = "cortisol_test_stats_file_exists.csv"
+        obs_stats = {
+            "stats_file": stats_file_path,
+            "n_requests": 10,
+            "logs": {
+                "log-volume": 100,
+                "datadog-cost": 50,
+                "grafana-cost": 30,
+                "new-relic-cost": 30,
+                "gcp-cloud-logging-cost": 30,
+            },
+        }
+        self.environment.runner.stats.custom_stats = obs_stats
+        _ = on_quit(self.environment)
+        if not Path(stats_file_path).resolve().is_file():
+            raise AssertionError("File does not exist: %s" % str(stats_file_path))
+        os.remove(stats_file_path)
 
     @patch("cortisol.cortisollib.readers.docker_log_file_size_reader")
     @patch("cortisol.cortisollib.readers.docker_count_log_entries")
@@ -86,6 +107,7 @@ class TestHooks(unittest.TestCase):
             "start_time": 1,
             "initial_log_volume": 0,
             "initial_log_entries": 0,
+            "stats_file": "file.csv",
         }
         mock_docker_log_file_size_reader.return_value = 1024
         mock_docker_count_log_entries.return_value = 3

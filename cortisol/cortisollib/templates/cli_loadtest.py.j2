@@ -1,4 +1,5 @@
 from time import time
+from pathlib import Path
 from locust.env import Environment
 from locust import task, events, HttpUser, between
 
@@ -14,6 +15,13 @@ def _(parser):
         type=str,
         env_var="CONTAINER_ID",
         default="1212aa67e530af75b3310e1e5b30261b36844a6748df1d321088c4d48a20ebd0",
+    )
+    parser.add_argument(
+        "--stats-file",
+        type=Path,
+        env_var="STATS_FILE",
+        nargs="?",
+        default=None,
     )
 
 

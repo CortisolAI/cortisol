@@ -1,3 +1,4 @@
+import csv
 from time import time
 from prettytable import PrettyTable
 
@@ -142,6 +143,15 @@ def on_quit(environment, **kwargs):
     # Create a PrettyTable instance
     table = create_results_table(obs_stats)
     print(table)
+    if obs_stats["stats_file"]:
+        with open(obs_stats["stats_file"], "w") as f:
+            header = ["run_id", "n_requests"] + list(obs_stats["logs"].keys())
+            values = [f"cortisol_{int(time())}", obs_stats["n_requests"]] + list(
+                obs_stats["logs"].values()
+            )
+            w = csv.writer(f, delimiter=",")
+            w.writerow(header)
+            w.writerow(values)
     return table
 
 
@@ -237,6 +247,7 @@ def on_request(
         },
     )
     stats.setdefault("n_requests", 0)
+    stats.setdefault("stats_file", context["stats_file"])
 
     log_file = context["log_file"]
     container_id = context["container_id"]
