@@ -47,6 +47,10 @@ All the latter options plus the following in case your application run in a Dock
 
 `--config PATH`                 Path to config file (YAML or JSON) containing the long version of flags from option 1
 
+#### Optional Flags
+
+`--stats-file PATH`             Path where to store the cortisol statistics output as a csv
+
 Here's a YAML example:
 
 ```YAML
@@ -56,6 +60,7 @@ users: 100
 spawn-rate: 30
 run-time: "20m"
 cortisol-file: "some_cortisol_file.py"
+stats-file: "cortisol_stats.csv"
 ```
 
 Here's a YAML example with docker container id:
@@ -68,6 +73,7 @@ spawn-rate: 30
 run-time: "20m"
 cortisol-file: "some_cortisol_file.py"
 container-id: "80f1bc1e7feb"
+stats-file: "cortisol_stats.csv"
 ```
 
 and a JSON example:
@@ -80,6 +86,7 @@ and a JSON example:
   "spawn_rate": 30,
   "run_time": "20m",
   "cortisol_file": "some_cortisol_file.py",
-  "container_id": "80f1bc1e7feb"
+  "container_id": "80f1bc1e7feb",
+  "stats-file": "cortisol_stats.csv"
 }
 ```
