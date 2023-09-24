@@ -93,6 +93,7 @@ def render_locust_command(
     spawn_rate: int,
     run_time: str,
     container_id: str,
+    stats_file: Path = None,
 ):
     """
     Generate a command for running a Locust load test in headless mode.
@@ -107,6 +108,7 @@ def render_locust_command(
         spawn_rate (int): The rate at which new users are spawned per second.
         run_time (str): The duration of the load test run (e.g., '10m' for 10 minutes).
         container_id (str): Identifier for the Docker container, if applicable.
+        stats_file (Path): Optional. File path where the cortisol stats will be stored as csv
 
     Returns:
         List[str]: A list representing the command for running the Locust load test.
@@ -140,6 +142,9 @@ def render_locust_command(
         log_file,
     ]
 
+    if stats_file:
+        command += ["--stats-file", stats_file]
+
     return command
 
 
@@ -151,6 +156,7 @@ def get_cost_estimate(
     spawn_rate: int,
     run_time: str,
     container_id: str = "",
+    stats_file: Path = None,
 ):
     """
     Calculate the estimated cost of logs.
@@ -168,6 +174,7 @@ def get_cost_estimate(
         spawn_rate (int): The rate at which new users are spawned per second.
         run_time (str): The duration of the load test run (e.g., '10m' for 10 minutes).
         container_id (str): Identifier for the Docker container, if applicable.
+        stats_file (Path): Optional. File path where the cortisol stats will be stored as csv
 
     Returns:
         int: The return code of the subprocess that executed the Locust load test.
@@ -185,7 +192,7 @@ def get_cost_estimate(
     render_locustfile(cortisol_file)
 
     command = render_locust_command(
-        host, log_file, num_users, spawn_rate, run_time, container_id
+        host, log_file, num_users, spawn_rate, run_time, container_id, stats_file
     )
 
     done = threading.Event()
