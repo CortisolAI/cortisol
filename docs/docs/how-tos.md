@@ -39,7 +39,7 @@ Here's how you can do it:
 ```terminal
 docker logs -f {container-id} >> /path/to/my_redirected_logs.log
 ```
-2. Now, run cortisol as usual:
+3. Now, run cortisol as usual:
 ```terminal
 cortisol logs cost-estimate --host http://127.0.0.1:8080 --users 10 --spawn-rate 5 --run-time 10s --cortisol-file cortisolfile.py --cortisol-file ./examples/cortisolfile.py --log-file /path/to/my_redirected_logs.log
 ```
